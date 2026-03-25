@@ -488,14 +488,6 @@ if not cycles.empty:
             ]
         }
         st.dataframe(pd.DataFrame(summary_data), use_container_width=True, hide_index=True)
-
-# (Feature Importance and Model Evaluation sections removed per user request)
-
-# ─────────────────────────────────────────────────────────────────────────────
-#  CHART 3: Cross-Validation fold metrics (if cv_metrics.csv exists)
-# ─────────────────────────────────────────────────────────────────────────────
-
-
 # ─────────────────────────────────────────────────────────────────────────────
 #  FOOTER
 # ─────────────────────────────────────────────────────────────────────────────
