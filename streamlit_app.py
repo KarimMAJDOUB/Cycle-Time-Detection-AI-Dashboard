@@ -229,9 +229,10 @@ def load_raw(csv_path: str, mtime: float) -> pd.DataFrame:  # mtime busts cache 
     df["i61"]  = pd.to_numeric(df["i61"],  errors="coerce")
     df = df.dropna(subset=["time", "i12", "i61"])
     # ✅ Filtre global : i12 > 5A ET i61 > 5A
-    df = df[(df["i12"] > 5.0) & (df["i61"] > 5.0)]
+    df = df[(df["i12"] > 1.0) & (df["i61"] > 1.0)]
 
     df = df.sort_values(["name", "time"]).reset_index(drop=True)
+    print(f"[DEBUG] load_raw → df.shape après lecture + filtre : {df.shape}  ({len(df):,} lignes)")
     return df
 
 
@@ -323,6 +324,7 @@ ts_ns = df_g["time"].to_numpy()
 ts_s  = ts_ns / 1e9
 t_rel = ts_s - ts_s[0]                       # elapsed time (s)
 raw   = df_g[sig_col].to_numpy(dtype=float)
+print(f"[DEBUG] gauge='{gauge}' | df_g.shape : {df_g.shape}  ({len(df_g):,} lignes) | raw.shape : {raw.shape}")
 fs    = estimate_fs(ts_ns)
 
 smoothed     = smooth_signal(raw, fs, window_s=smooth_win)
