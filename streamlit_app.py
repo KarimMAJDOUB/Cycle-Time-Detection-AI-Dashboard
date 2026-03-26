@@ -213,8 +213,15 @@ def build_cycles(ts_ns: np.ndarray, peak_indices: np.ndarray,
 #  CACHED DATA LOADING
 # ─────────────────────────────────────────────────────────────────────────────
 
+def _csv_mtime(csv_path: str) -> float:
+    """Return the last-modified timestamp of the CSV file.
+    Used as a cache key so the cache auto-invalidates when the file changes."""
+    p = Path(csv_path)
+    return p.stat().st_mtime if p.exists() else 0.0
+
+
 @st.cache_data(show_spinner=False)
-def load_raw(csv_path: str) -> pd.DataFrame:
+def load_raw(csv_path: str, _mtime: float) -> pd.DataFrame:  # _mtime busts cache on file change
     df = pd.read_csv(csv_path)
     df.columns = [c.strip() for c in df.columns]
     df["time"] = pd.to_numeric(df["time"], errors="coerce")
@@ -250,7 +257,7 @@ if not Path(CSV_PATH).exists():
     st.stop()
 
 with st.spinner("Loading data…"):
-    df_raw = load_raw(CSV_PATH)
+    df_raw = load_raw(CSV_PATH, _mtime=_csv_mtime(CSV_PATH))
 
 gauges = sorted(df_raw["name"].unique())
 
@@ -278,6 +285,15 @@ with st.sidebar:
 
     st.markdown("---")
     model_path = MODEL_PATH
+
+    st.markdown("### 🔄 Data")
+    st.caption(f"📁 `{Path(CSV_PATH).name}`")
+    st.caption(f"🕒 Modified: {pd.Timestamp(_csv_mtime(CSV_PATH), unit='s').strftime('%Y-%m-%d %H:%M:%S')}")
+    if st.button("🔃 Refresh Data", use_container_width=True):
+        st.cache_data.clear()
+        st.rerun()
+
+    st.markdown("---")
     st.caption("DP — Digital Practice")
 
 # ─────────────────────────────────────────────────────────────────────────────
