@@ -229,10 +229,9 @@ def load_raw(csv_path: str, mtime: float) -> pd.DataFrame:  # mtime busts cache 
     df["i61"]  = pd.to_numeric(df["i61"],  errors="coerce")
     df = df.dropna(subset=["time", "i12", "i61"])
     # ✅ Filtre global : i12 > 5A ET i61 > 5A
-    df = df[(df["i12"] > 1.0) & (df["i61"] > 1.0)]
+    df = df[(df["i12"] > 5.0) & (df["i61"] > 5.0)]
 
     df = df.sort_values(["name", "time"]).reset_index(drop=True)
-    print(f"[DEBUG] load_raw → df.shape après lecture + filtre : {df.shape}  ({len(df):,} lignes)")
     return df
 
 
