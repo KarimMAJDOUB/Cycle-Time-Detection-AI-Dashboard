@@ -272,13 +272,13 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("### 🔧 Signal Parameters")
     smooth_win   = st.slider("Smoothing window (s)",  3.0, 30.0, 11.0, 0.5)
-    peak_prom_k  = st.slider("Prominence k (σ_MAD)", 0.5, 4.0,  1.5,  0.1)
+    peak_prom_k  = st.slider("Prominence k (σ_MAD)²", 0.5, 4.0,  1.5,  0.1)
     min_dist_s   = st.slider("Min peak distance (s)", 1.0, 20.0, 5.0,  0.5)
     threshold    = st.slider("P(peak) threshold",     0.05, 0.95, 0.50, 0.05)
 
     st.markdown("---")
     model_path = MODEL_PATH
-    st.caption("Capgemini — Digital Practice")
+    st.caption("DP — Digital Practice")
 
 # ─────────────────────────────────────────────────────────────────────────────
 #  MODEL LOAD
