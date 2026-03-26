@@ -221,7 +221,7 @@ def _csv_mtime(csv_path: str) -> float:
 
 
 @st.cache_data(show_spinner=False)
-def load_raw(csv_path: str, _mtime: float) -> pd.DataFrame:  # _mtime busts cache on file change
+def load_raw(csv_path: str, mtime: float) -> pd.DataFrame:  # mtime busts cache on file change
     df = pd.read_csv(csv_path)
     df.columns = [c.strip() for c in df.columns]
     df["time"] = pd.to_numeric(df["time"], errors="coerce")
@@ -257,7 +257,7 @@ if not Path(CSV_PATH).exists():
     st.stop()
 
 with st.spinner("Loading data…"):
-    df_raw = load_raw(CSV_PATH, _mtime=_csv_mtime(CSV_PATH))
+    df_raw = load_raw(CSV_PATH, mtime=_csv_mtime(CSV_PATH))
 
 gauges = sorted(df_raw["name"].unique())
 
